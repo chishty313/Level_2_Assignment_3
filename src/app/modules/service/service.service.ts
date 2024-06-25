@@ -2,6 +2,8 @@ import httpStatus from 'http-status';
 import AppError from '../../errors/AppError';
 import { IService } from './service.interface';
 import { ServiceModel } from './service.model';
+import QueryBuilder from '../../builder/QueryBuilder';
+import { serviceSearchableFields } from './service.constant';
 
 const createServiceIntoDB = async (payload: IService) => {
   const isServiceExists = await ServiceModel.isServiceExistsByName(
@@ -18,4 +20,14 @@ const createServiceIntoDB = async (payload: IService) => {
   return await ServiceModel.create(payload);
 };
 
-export const serviceServices = { createServiceIntoDB };
+const getAllServicesFromDB = async (query: Record<string, unknown>) => {
+  const serviceQuery = new QueryBuilder(ServiceModel.find(), query)
+    .search(serviceSearchableFields)
+    .filter()
+    .sort()
+    .fields()
+    .paginate();
+  return await serviceQuery.modelQuery;
+};
+
+export const serviceServices = { createServiceIntoDB, getAllServicesFromDB };
