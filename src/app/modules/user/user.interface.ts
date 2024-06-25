@@ -1,6 +1,8 @@
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
+import { USER_ROLE } from './user.constant';
 
 export interface TUser {
+  _id?: Types.ObjectId;
   name: string;
   email: string;
   password: string;
@@ -10,6 +12,13 @@ export interface TUser {
   createdAt?: Date;
   updatedAt?: Date;
 }
+
+export type TLoginUser = {
+  email: string;
+  password: string;
+};
+
+export type TUserRole = keyof typeof USER_ROLE;
 
 export interface UserInterfaceModel extends Model<TUser> {
   isUserExistsByEmail(email: string): Promise<TUser>;
@@ -22,5 +31,3 @@ export interface UserInterfaceModel extends Model<TUser> {
     jwtIssuedTimestamp: number,
   ): boolean;
 }
-
-export type TUserRole = keyof typeof USER_ROLE;
