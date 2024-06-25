@@ -15,4 +15,6 @@ router.post(
 
 router.get('/', auth('admin', 'user'), serviceControllers.getAllServices);
 
+router.get('/:id', auth('admin', 'user'), serviceControllers.getSingleService);
+
 export const serviceRoutes = router;

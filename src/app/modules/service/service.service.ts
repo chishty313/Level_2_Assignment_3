@@ -30,4 +30,21 @@ const getAllServicesFromDB = async (query: Record<string, unknown>) => {
   return await serviceQuery.modelQuery;
 };
 
-export const serviceServices = { createServiceIntoDB, getAllServicesFromDB };
+const getSingleServiceFromDB = async (id: string) => {
+  const service = await ServiceModel.findById(id);
+
+  if (!service) {
+    throw new AppError(
+      httpStatus.NOT_FOUND,
+      'No service available with this service ID.',
+    );
+  }
+
+  return service;
+};
+
+export const serviceServices = {
+  createServiceIntoDB,
+  getAllServicesFromDB,
+  getSingleServiceFromDB,
+};
