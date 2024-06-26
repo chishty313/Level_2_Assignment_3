@@ -28,6 +28,22 @@ const serviceSchema = new Schema<IService, ServiceInterfaceModel>(
   { timestamps: true },
 );
 
+// Query middleware
+serviceSchema.pre('find', function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+
+serviceSchema.pre('findOne', function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+
+serviceSchema.pre('aggregate', function (next) {
+  this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
+  next();
+});
+
 serviceSchema.statics.isServiceExistsByName = async function (name: string) {
   return await ServiceModel.findOne({ name });
 };

@@ -43,7 +43,7 @@ const getSingleServiceFromDB = async (id: string) => {
   return service;
 };
 
-const upteServiceIntoDB = async (id: string, payload: Partial<IService>) => {
+const updateServiceIntoDB = async (id: string, payload: Partial<IService>) => {
   // Checking if the service exists or not !!
   const isServiceExists = await ServiceModel.findById(id);
   if (!isServiceExists) {
@@ -68,9 +68,39 @@ const upteServiceIntoDB = async (id: string, payload: Partial<IService>) => {
   });
 };
 
+const deleteServiceFromDB = async (id: string) => {
+  // Checking if the service exists or not !!
+  const isServiceExists = await ServiceModel.findById(id);
+  if (!isServiceExists) {
+    throw new AppError(
+      httpStatus.NOT_FOUND,
+      'Service with this ID does not exists !!',
+    );
+  }
+
+  // Checking if the service deleted or not !!
+  const isServiceDeleted = isServiceExists.isDeleted;
+  if (isServiceDeleted) {
+    throw new AppError(
+      httpStatus.NOT_FOUND,
+      'Service with this ID does not exists or deleted already !!',
+    );
+  }
+
+  return await ServiceModel.findByIdAndUpdate(
+    id,
+    { isDeleted: true },
+    {
+      new: true,
+      runValidators: true,
+    },
+  );
+};
+
 export const serviceServices = {
   createServiceIntoDB,
   getAllServicesFromDB,
   getSingleServiceFromDB,
-  upteServiceIntoDB,
+  updateServiceIntoDB,
+  deleteServiceFromDB,
 };
