@@ -150,8 +150,8 @@ const createSlotsIntoDB = async (payload: TSlot) => {
     slots.push(slot);
   }
 
-  await SlotModel.insertMany(slots);
-  return slots;
+  return await SlotModel.insertMany(slots);
+  
 };
 
 export const serviceServices = {
