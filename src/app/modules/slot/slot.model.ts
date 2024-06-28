@@ -26,6 +26,7 @@ const slotSchema = new Schema<TSlot>(
         values: ['available', 'booked', 'canceled'],
         message: '{VALUE} is not available',
       },
+      default: 'available',
       required: true,
     },
   },

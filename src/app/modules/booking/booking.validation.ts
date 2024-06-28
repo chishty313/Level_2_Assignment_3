@@ -12,6 +12,18 @@ export const createBookingValidationSchema = z.object({
   registrationPlate: z.string(),
 });
 
+export const updateBookingValidationSchema = z.object({
+  customer: z.string().optional(),
+  service: z.string().optional(),
+  slot: z.string().optional(),
+  vehicleType: z.enum([...VehicleTypes] as [string, ...string[]]).optional(),
+  vehicleBrand: z.string().optional(),
+  vehicleModel: z.string().optional(),
+  manufacturingYear: z.string().optional(),
+  registrationPlate: z.string().optional(),
+});
+
 export const BookingValidations = {
   createBookingValidationSchema,
+  updateBookingValidationSchema,
 };

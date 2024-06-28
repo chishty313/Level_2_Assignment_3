@@ -4,6 +4,9 @@ import { IService } from './service.interface';
 import { ServiceModel } from './service.model';
 import QueryBuilder from '../../builder/QueryBuilder';
 import { serviceSearchableFields } from './service.constant';
+import { TSlot } from '../slot/slot.interface';
+import { SlotModel } from '../slot/slot.model';
+import { dateFormatter } from '../slot/slot.utils';
 
 const createServiceIntoDB = async (payload: IService) => {
   const isServiceExists = await ServiceModel.isServiceExistsByName(
@@ -97,10 +100,65 @@ const deleteServiceFromDB = async (id: string) => {
   );
 };
 
+const createSlotsIntoDB = async (payload: TSlot) => {
+  const { service, date, startTime, endTime } = payload;
+
+  // checking is the service available or not !!
+  const isServiceExists = await ServiceModel.findById(service);
+  if (!isServiceExists) {
+    throw new AppError(
+      httpStatus.NOT_FOUND,
+      'Service with this ID does not exists !!',
+    );
+  }
+
+  // fetching service duration from service
+  const serviceDuration = isServiceExists.duration;
+
+  // Converting time in to minutes
+  const startMinutes =
+    parseInt(startTime.split(':')[0]) * 60 + parseInt(startTime.split(':')[1]);
+  const endMinutes =
+    parseInt(endTime.split(':')[0]) * 60 + parseInt(endTime.split(':')[1]);
+
+  const totalDuration = endMinutes - startMinutes;
+
+  // calculalte number of slots
+  const slotNumbers = totalDuration / serviceDuration;
+
+  // generate slots
+  const slots: TSlot[] = [];
+
+  for (let i = 0; i < slotNumbers; i++) {
+    const slotStart = startMinutes + i * serviceDuration;
+    const slotEnd = slotStart + serviceDuration;
+
+    const slot: TSlot = {
+      service,
+      date: dateFormatter(new Date(date)),
+      startTime: `${Math.floor(slotStart / 60)
+        .toString()
+        .padStart(2, '0')}:${Math.floor(slotStart % 60)
+        .toString()
+        .padStart(2, '0')}`,
+      endTime: `${Math.floor(slotEnd / 60)
+        .toString()
+        .padStart(2, '0')}:${Math.floor(slotEnd % 60)
+        .toString()
+        .padStart(2, '0')}`,
+    };
+    slots.push(slot);
+  }
+
+  await SlotModel.insertMany(slots);
+  return slots;
+};
+
 export const serviceServices = {
   createServiceIntoDB,
   getAllServicesFromDB,
   getSingleServiceFromDB,
   updateServiceIntoDB,
   deleteServiceFromDB,
+  createSlotsIntoDB,
 };

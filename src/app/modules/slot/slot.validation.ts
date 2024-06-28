@@ -18,7 +18,9 @@ const createSlotValidationSchema = z.object({
       date: z.string(),
       startTime: timeStringSchema,
       endTime: timeStringSchema,
-      isBooked: z.enum([...SlotBookingStatus] as [string, ...string[]]),
+      isBooked: z
+        .enum([...SlotBookingStatus] as [string, ...string[]])
+        .default('available'),
     })
     .refine(
       (body) => {
