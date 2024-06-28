@@ -133,6 +133,10 @@ const createSlotsIntoDB = async (payload: TSlot) => {
     const slotStart = startMinutes + i * serviceDuration;
     const slotEnd = slotStart + serviceDuration;
 
+    if (slotStart > endMinutes || slotEnd > endMinutes) {
+      break;
+    }
+
     const slot: TSlot = {
       service,
       date: dateFormatter(new Date(date)),
@@ -151,7 +155,6 @@ const createSlotsIntoDB = async (payload: TSlot) => {
   }
 
   return await SlotModel.insertMany(slots);
-  
 };
 
 export const serviceServices = {
