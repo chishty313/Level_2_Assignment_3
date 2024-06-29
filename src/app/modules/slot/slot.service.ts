@@ -5,7 +5,7 @@ const getAllAvailabilityOfSlotsFromDB = async (
 ) => {
   const { date, serviceId: service } = query;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const queryConditions: any = { isBooked: 'available' };
+  const queryConditions: any = { isBooked: { $ne: 'booked' } };
   if (date) {
     queryConditions.date = date;
   }
