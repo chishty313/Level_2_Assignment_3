@@ -43,12 +43,20 @@ const bookServiceIntoDB = async (email: string, payload: Partial<TBooking>) => {
       );
     }
 
-    if (isSlotExists.isBooked !== 'available') {
+    if (isSlotExists.isBooked === 'booked') {
       throw new AppError(
         httpStatus.CONFLICT,
         `Provided slot is ${isSlotExists.isBooked} !!!`,
       );
     }
+
+    const testResult = await SlotModel.findByIdAndUpdate(
+      slot,
+      { isBooked: 'booked' },
+      { session, new: true },
+    );
+
+    console.log({ testResult });
 
     const serviceBooking = {
       customer: findUserId?._id,
@@ -61,12 +69,6 @@ const bookServiceIntoDB = async (email: string, payload: Partial<TBooking>) => {
       registrationPlate,
     };
 
-    await SlotModel.findByIdAndUpdate(
-      slot,
-      { isBooked: 'booked' },
-      { session },
-    );
-
     const booking = await BookingModel.create([serviceBooking], [session]);
     console.log({ booking });
 
@@ -75,6 +77,9 @@ const bookServiceIntoDB = async (email: string, payload: Partial<TBooking>) => {
     }
 
     console.log(booking[0]._id);
+
+    await session.commitTransaction();
+    await session.endSession();
 
     const bookedService = await BookingModel.findById(booking[0]._id)
       .populate({ path: 'customer', select: '_id name email phone address' })
@@ -88,9 +93,6 @@ const bookServiceIntoDB = async (email: string, payload: Partial<TBooking>) => {
       });
 
     console.log(bookedService);
-
-    await session.commitTransaction();
-    await session.endSession();
 
     return bookedService;
   } catch (error) {
