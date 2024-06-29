@@ -4,13 +4,13 @@
 Clone the project
 
 ```bash
-  git clone https://github.com/chishty313/level_2_Assignment_2.git
+  https://github.com/chishty313/Level_2_Assignment_3.git
 ```
 
 Go to the project directory
 
 ```bash
-  cd level_2_Assignment_2
+  cd Level_2_Assignment_3
 ```
 
 Install dependencies
