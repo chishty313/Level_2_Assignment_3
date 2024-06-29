@@ -5,3 +5,5 @@ export const SlotBookingStatus: TIsBooked[] = [
   'booked',
   'canceled',
 ];
+
+export const slotSearchableFields = ['service', 'date'];
