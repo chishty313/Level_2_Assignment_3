@@ -16,14 +16,27 @@ const auth = (...requiredRoles: TUserRole[]) => {
 
     // check if the token is sent from the client
     if (!token) {
-      throw new AppError(httpStatus.UNAUTHORIZED, 'You are not authorized !!!');
+      return res.status(httpStatus.UNAUTHORIZED).json({
+        success: false,
+        statusCode: httpStatus.UNAUTHORIZED,
+        message: 'You have no access to this route',
+      });
     }
 
     // check if the token is valid or not
-    const decoded = jwt.verify(
-      token,
-      config.jwt_access_secrect as string,
-    ) as JwtPayload;
+    let decoded: JwtPayload;
+    try {
+      decoded = jwt.verify(
+        token,
+        config.jwt_access_secrect as string,
+      ) as JwtPayload;
+    } catch (error) {
+      return res.status(httpStatus.UNAUTHORIZED).json({
+        success: false,
+        statusCode: httpStatus.UNAUTHORIZED,
+        message: 'You have no access to this route',
+      });
+    }
 
     const { email, role } = decoded;
 
