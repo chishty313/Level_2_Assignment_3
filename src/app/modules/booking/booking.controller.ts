@@ -4,7 +4,6 @@ import sendResponse from '../../utils/sendResponse';
 import { bookingServices } from './booking.service';
 
 const bookService = catchAsync(async (req, res) => {
-  console.log(req.user);
   const { email } = req.user;
   const bookServiceResult = await bookingServices.bookServiceIntoDB(
     email,
@@ -18,6 +17,17 @@ const bookService = catchAsync(async (req, res) => {
   });
 });
 
+const getAllBookings = catchAsync(async (req, res) => {
+  const getAllBookingsResult = await bookingServices.getAllBookingsFromDB();
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'All bookings retrieved successfully',
+    data: getAllBookingsResult,
+  });
+});
+
 export const bookingControllers = {
   bookService,
+  getAllBookings,
 };

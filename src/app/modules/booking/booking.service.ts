@@ -102,6 +102,20 @@ const bookServiceIntoDB = async (email: string, payload: Partial<TBooking>) => {
   }
 };
 
+const getAllBookingsFromDB = async () => {
+  return await BookingModel.find()
+    .populate({ path: 'customer', select: '_id name email phone address' })
+    .populate({
+      path: 'service',
+      select: '_id name description price duration isDeleted',
+    })
+    .populate({
+      path: 'slot',
+      select: '_id service date startTime endTime isBooked',
+    });
+};
+
 export const bookingServices = {
   bookServiceIntoDB,
+  getAllBookingsFromDB,
 };

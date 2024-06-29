@@ -3,6 +3,7 @@ import { UserRoutes } from '../modules/user/user.route';
 import { serviceRoutes } from '../modules/service/service.route';
 import { slotRoutes } from '../modules/slot/slot.route';
 import { bookingRoutes } from '../modules/booking/booking.route';
+import { myBookingsRoutes } from '../modules/my-bookings/my-bookings.route';
 
 const router = Router();
 
@@ -22,6 +23,10 @@ const moduleRoutes = [
   {
     path: '/bookings',
     route: bookingRoutes,
+  },
+  {
+    path: '/my-bookings',
+    route: myBookingsRoutes,
   },
 ];
 
