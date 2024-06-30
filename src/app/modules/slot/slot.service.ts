@@ -12,7 +12,6 @@ const getAllAvailabilityOfSlotsFromDB = async (
   if (service) {
     queryConditions.service = service;
   }
-  console.log('Modified query conditions', queryConditions);
 
   return await SlotModel.find(queryConditions).populate('service');
 };

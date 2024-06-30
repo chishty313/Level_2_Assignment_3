@@ -10,8 +10,6 @@ import { UserModel } from '../modules/user/user.model';
 const auth = (...requiredRoles: TUserRole[]) => {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const tokenWithBearer = req.headers.authorization;
-    // console.log(token);
-    console.log(tokenWithBearer?.split(' '));
     const token = tokenWithBearer?.split(' ')[1];
 
     // check if the token is sent from the client

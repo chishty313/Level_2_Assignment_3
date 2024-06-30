@@ -6,7 +6,7 @@ import catchAsync from '../../utils/catchAsync';
 const getAllAvailabilityOfSlots = catchAsync(async (req, res) => {
   const getAllAvailabilityOfSlotsResult =
     await slotServices.getAllAvailabilityOfSlotsFromDB(req.query);
-  console.log(req.query);
+
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,

@@ -4,8 +4,6 @@ import { UserModel } from '../user/user.model';
 const getUsersBookingsFromDB = async (email: string) => {
   const findUserId = await UserModel.findOne({ email });
 
-  console.log({ mybookings: findUserId });
-
   const userDetails = await BookingModel.find({ customer: findUserId?._id })
     .select('-customer')
     .populate({
@@ -16,8 +14,6 @@ const getUsersBookingsFromDB = async (email: string) => {
       path: 'slot',
       select: '_id service date startTime endTime isBooked',
     });
-
-  console.log({ userDetails });
 
   return userDetails;
 };

@@ -23,8 +23,6 @@ const bookServiceIntoDB = async (email: string, payload: Partial<TBooking>) => {
 
     const findUserId = await UserModel.findOne({ email });
 
-    console.log(findUserId);
-
     //   Checking if the service id is valid or not
     const isServiceExists = await ServiceModel.findById(service);
     if (!isServiceExists) {
@@ -50,13 +48,11 @@ const bookServiceIntoDB = async (email: string, payload: Partial<TBooking>) => {
       );
     }
 
-    const testResult = await SlotModel.findByIdAndUpdate(
+    await SlotModel.findByIdAndUpdate(
       slot,
       { isBooked: 'booked' },
       { session, new: true },
     );
-
-    console.log({ testResult });
 
     const serviceBooking = {
       customer: findUserId?._id,
@@ -70,13 +66,10 @@ const bookServiceIntoDB = async (email: string, payload: Partial<TBooking>) => {
     };
 
     const booking = await BookingModel.create([serviceBooking], [session]);
-    console.log({ booking });
 
     if (!booking.length) {
       throw new AppError(httpStatus.BAD_REQUEST, 'Can not book a service !!!');
     }
-
-    console.log(booking[0]._id);
 
     await session.commitTransaction();
     await session.endSession();
@@ -91,8 +84,6 @@ const bookServiceIntoDB = async (email: string, payload: Partial<TBooking>) => {
         path: 'slot',
         select: '_id service date startTime endTime isBooked',
       });
-
-    console.log(bookedService);
 
     return bookedService;
   } catch (error) {
