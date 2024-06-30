@@ -5,9 +5,15 @@ import { UserModel } from '../user/user.model';
 import { TBooking } from './booking.interface';
 import { SlotModel } from '../slot/slot.model';
 import { BookingModel } from './booking.model';
-import mongoose from 'mongoose';
+import mongoose, { Types } from 'mongoose';
 
-const bookServiceIntoDB = async (email: string, payload: Partial<TBooking>) => {
+const bookServiceIntoDB = async (
+  email: string,
+  payload: Partial<TBooking> & {
+    serviceId: Types.ObjectId;
+    slotId: Types.ObjectId;
+  },
+) => {
   const session = await mongoose.startSession();
   try {
     session.startTransaction();
