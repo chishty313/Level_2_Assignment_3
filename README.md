@@ -9,7 +9,7 @@ Live Web URL
 
 Clone the project
 ```bash
-  https://github.com/chishty313/Level_2_Assignment_3.git
+  git clone https://github.com/chishty313/Level_2_Assignment_3.git
 ```
 
 Go to the project directory
