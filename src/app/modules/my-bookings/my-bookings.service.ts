@@ -7,7 +7,7 @@ const getUsersBookingsFromDB = async (email: string) => {
   console.log({ mybookings: findUserId });
 
   const userDetails = await BookingModel.find({ customer: findUserId?._id })
-    .populate({ path: 'customer', select: '_id name email phone address' })
+    .select('-customer')
     .populate({
       path: 'service',
       select: '_id name description price duration isDeleted',
